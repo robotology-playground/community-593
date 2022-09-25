@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<suite name="Test Assignment Make It Roll">
+    <description>Testing the assignment on Make It Roll</description>
+    <environment>--robotname icubSim</environment>
+    <fixture param="--fixture fixture.xml"> yarpmanager </fixture>
+
+    <test type="dll"> TestAssignmentMakeItRoll </test>
+</suite>

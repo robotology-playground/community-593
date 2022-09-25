@@ -1,0 +1,87 @@
+<application>
+    <name>Fixture for Assignment on Make It Roll</name>
+    <description>A fixture to prepare components required for the assignment</description>
+    <version>1.0</version>
+    <authors>
+        <author email="ugo.pattacini@iit.it">Ugo Pattacini</author>
+    </authors>
+    <module>
+        <name>iCub_SIM</name>
+        <node>testnode</node>
+    </module>
+    <module>
+        <name>yarprobotinterface</name>
+        <parameters>--context simCartesianControl --config no_legs.xml</parameters>
+        <dependencies>
+            <port timeout="10">/icubSim/torso/state:o</port>
+            <port timeout="10">/icubSim/left_arm/state:o</port>
+            <port timeout="10">/icubSim/right_arm/state:o</port>
+        </dependencies>
+        <ensure>
+            <wait>2</wait>
+        </ensure>
+        <node>testnode</node>
+    </module>
+    <module>
+        <name>iKinCartesianSolver</name>
+        <parameters>--context simCartesianControl --part right_arm</parameters>
+        <dependencies>
+            <port timeout="10">/icubSim/torso/state:o</port>
+            <port timeout="10">/icubSim/right_arm/state:o</port>
+        </dependencies>
+        <ensure>
+            <wait>2</wait>
+        </ensure>
+        <node>testnode</node>
+    </module>
+    <module>
+        <name>iKinGazeCtrl</name>
+        <parameters>--from configSim.ini</parameters>
+        <dependencies>
+            <port timeout="10">/icubSim/torso/state:o</port>
+            <port timeout="10">/icubSim/head/state:o</port>
+            <port timeout="10">/icubSim/inertial</port>
+        </dependencies>
+        <ensure>
+            <wait>2</wait>
+        </ensure>
+        <node>testnode</node>
+    </module>
+    <module>
+        <name>assignment_make-it-roll</name>
+        <dependencies>
+            <port timeout="10">/icubSim/cam/left</port>
+            <port timeout="10">/icubSim/cam/right</port>
+            <port timeout="10">/icubSim/cartesianController/right_arm/state:o</port>
+            <port timeout="10">/iKinGazeCtrl/rpc</port>
+        </dependencies>
+        <ensure>
+            <wait>3</wait>
+        </ensure>
+        <node>testnode</node>
+    </module>
+    <module>
+        <name>yarpdatadumper</name>
+        <parameters>--name right_hand --overwrite --downsample 10</parameters>
+        <workdir>/tmp</workdir>
+        <ensure>
+            <wait>3</wait>
+        </ensure>
+        <node>testnode</node>
+    </module>
+    <connection>
+        <from>/icubSim/cam/left</from>
+        <to>/imgL:i</to>
+        <protocol>udp</protocol>
+    </connection>
+    <connection>
+        <from>/icubSim/cam/right</from>
+        <to>/imgR:i</to>
+        <protocol>udp</protocol>
+    </connection>
+    <connection>
+        <from>/icubSim/skin/right_hand_comp</from>
+        <to>/right_hand</to>
+        <protocol>tcp</protocol>
+    </connection>
+ </application>
